@@ -28,7 +28,7 @@ export default class HelpCommand implements ICommand {
       .addFields(
         {
           name: 'Dostępne komendy:', 
-          value: `\`komenda\`|\`alias\` \`<argumenty>\` - opis\n\n${commandStrings.join('\n')}`,
+          value: `\`komenda\`|\`alias\` \`<argument [opcjonalny argument]>\` - opis\n\n${commandStrings.join('\n')}`,
         }
       )
 

@@ -4,11 +4,11 @@ import { Message } from 'discord.js';
 export default class RollCommand implements ICommand {
   readonly name = 'roll';
   readonly aliases = ['r'];
-  readonly usage = '`<XdY>` lub `<XkY>` (X - liczba kości, Y - wartość kości)';
+  readonly usage = '`<[X]dY[+Z]>` lub `<[X]kY[+Z]>` (X - liczba kości, Y - wartość kości, Z - bonus)';
   readonly description = 'rzuć kośćmi';
   execute(message: Message, args: string[]) {
     if (args.length < 1) {
-      message.channel.send(`Podaj argumenty (np. \`2d6\` lub \`1k8\`)`);
+      message.channel.send(`Podaj argumenty`);
       return;
     }
 
@@ -19,27 +19,31 @@ export default class RollCommand implements ICommand {
 
     const rolls = [];
     for (const arg of args) {
-      const splitted = arg.split(/[dk]/);
-      const howManyDice = parseInt(splitted[0], 10);
-      const diceValue = parseInt(splitted[1], 10);
-
-      if (isNaN(howManyDice) || isNaN(diceValue)) {
-        message.channel.send(`Niewłaściwy format argumentów (\`${arg}\`), spróbuj \`2d6\` lub \`1k8\``);
+      const validationRegex = /^(\d+)?[dk](\d+)(\+\d+)?$/;
+      const isValid = RegExp(validationRegex).test(arg);
+      if (!isValid) {
+        message.channel.send(`Niewłaściwy format argumentów (\`${arg}\`)`);
         return;
       }
 
-      if (howManyDice < 1 || diceValue < 2) {
-        message.channel.send(`Niewłaściwe wartości (\`${arg}\`)`);
+      const values = arg.match(validationRegex);
+
+      const howManyDice = Number(values[1]) || 1;
+      const diceValue = Number(values[2]);
+      const plus = Number(values[3]);
+
+      if (diceValue < 2) {
+        message.channel.send(`Niewłaściwa wartość kości (\`${diceValue}\`)`);
         return;
       }
 
-      rolls.push(rollDice(howManyDice, diceValue));
+      rolls.push(rollDice(howManyDice, diceValue, plus));
     }
 
     let response = '';
     for (const roll of rolls) {
       response = response.concat(
-        `\`${roll.string}\` ( ${roll.valuesStrings.join('+')} ) = ${roll.sum}\n` +
+        `\`${roll.string}\` ( ${roll.valuesStrings.join('+')} ) = ${roll.sumString}\n` +
         `Sukcesów: ${roll.successes}\n` +
         `Porażek: ${roll.failures}\n` +
         `\n`
@@ -53,7 +57,7 @@ function randomNumber(diceValue: number) {
   return (Math.floor(Math.random() * diceValue) + 1);
 }
 
-function rollDice(howManyDice: number, diceValue: number) {
+function rollDice(howManyDice: number, diceValue: number, plus?: number) {
   const values = new Array(howManyDice).fill(undefined).map(() => {
     return randomNumber(diceValue);
   });
@@ -74,10 +78,10 @@ function rollDice(howManyDice: number, diceValue: number) {
   });
 
   const roll = {
-    string: `${howManyDice}d${diceValue}`,
+    string: `${howManyDice}d${diceValue}${plus ? `+${plus}` : ''}`,
     values,
     valuesStrings,
-    sum,
+    sumString: (plus ? `${sum} + ${plus} = ${sum + plus}` : sum.toString()),
     successes,
     failures,
   }
