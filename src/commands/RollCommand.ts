@@ -1,10 +1,10 @@
-import ICommand from './Command';
+import { ICommand } from '../Api';
 import { Message } from 'discord.js';
 
 export default class RollCommand implements ICommand {
-  name: 'roll';
-  aliases: ['r'];
-  description: 'eg. 1d6, 4d8, 3k12';
+  readonly name = 'roll';
+  readonly aliases = ['r'];
+  readonly description = 'eg. 1d6, 4d8, 3k12';
   execute(message: Message, args: string[]) {
     if (args.length < 1) {
       message.channel.send(`Podaj argumenty (np. \`2d6\` lub \`1k8\`)`);

@@ -1,10 +1,10 @@
-import ICommand from './Command';
+import { ICommand } from '../Api';
 import { Message } from 'discord.js';
 
 export default class TalesCommand implements ICommand {
-  name: 'tales';
-  aliases: ['t', 'tftl'];
-  description: 'Roll for Tales From The Loop (d6) | Usage: tales `tales <number>`';
+  readonly name = 'tales';
+  readonly aliases = ['t', 'tftl'];
+  readonly description = 'Roll for Tales From The Loop (d6) | Usage: tales `tales <number>`';
   execute(message: Message, args: string[]) {
     if (args.length > 1) {
       message.channel.send(`Maksymalna liczba argumentów wynosi 1`);

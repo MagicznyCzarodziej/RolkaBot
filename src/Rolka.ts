@@ -1,8 +1,6 @@
+import * as fs from 'fs';
 import { Client, Message, Collection } from 'discord.js';
-
-import ICommand from './commands/Command';
-import RollCommand from './commands/RollCommand';
-import TalesCommand from './commands/TalesCommand';
+import { ICommand } from './api';
 
 export default class Rolka {
   private client: Client;
@@ -23,11 +21,17 @@ export default class Rolka {
     console.log('Starting bot...');
 
     // Load commands
-    this.commands.set('roll', new RollCommand());
-    this.commands.set('r', new RollCommand());
-    this.commands.set('tales', new TalesCommand());
-    this.commands.set('tftl', new TalesCommand());
-    this.commands.set('t', new TalesCommand());
+    const commandFiles = fs.readdirSync(__dirname + '/commands').filter((file) => file.endsWith('.js'));
+    
+    for (const file of commandFiles) {
+      const command = require(__dirname + `/commands/${file}`).default;
+      const commandInstance = new command();
+
+      this.commands.set(commandInstance.name, commandInstance);
+      for (const alias of commandInstance.aliases) {
+        this.commands.set(alias, commandInstance);
+      }
+    }
 
     this.client.on('ready', () => {
       console.log('Bot connected');
@@ -47,7 +51,7 @@ export default class Rolka {
       const args = msg.split(/\s+/);
       const commandName = args.shift().toLowerCase();
       const command = this.commands.get(commandName);
-
+      
       if (command) command.execute(message, args);
       else if (this.prefixRequired && message.content.startsWith(this.prefix)) {
         message.channel.send('Niewłaściwa komenda.');
