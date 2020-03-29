@@ -35,6 +35,7 @@ export default class Rolka {
 
     this.client.on('ready', () => {
       console.log('Bot connected');
+      this.client.user.setActivity(`${this.prefix}help`, { type: 'LISTENING'});
     });
 
     this.client.on('message', (message) => {
