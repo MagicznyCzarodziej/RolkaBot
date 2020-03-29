@@ -2,6 +2,7 @@ import { Client, Message, Collection } from 'discord.js';
 
 import ICommand from './commands/Command';
 import RollCommand from './commands/RollCommand';
+import TalesCommand from './commands/TalesCommand';
 
 export default class Rolka {
   private client: Client;
@@ -24,6 +25,9 @@ export default class Rolka {
     // Load commands
     this.commands.set('roll', new RollCommand());
     this.commands.set('r', new RollCommand());
+    this.commands.set('tales', new TalesCommand());
+    this.commands.set('tftl', new TalesCommand());
+    this.commands.set('t', new TalesCommand());
 
     this.client.on('ready', () => {
       console.log('Bot connected');
