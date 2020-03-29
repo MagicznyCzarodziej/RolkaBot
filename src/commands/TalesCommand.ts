@@ -4,7 +4,8 @@ import { Message } from 'discord.js';
 export default class TalesCommand implements ICommand {
   readonly name = 'tales';
   readonly aliases = ['t', 'tftl'];
-  readonly description = 'Roll for Tales From The Loop (d6) | Usage: tales `tales <number>`';
+  readonly usage = '`<liczba kości>`';
+  readonly description = 'rzuć kośćmi d6';
   execute(message: Message, args: string[]) {
     if (args.length > 1) {
       message.channel.send(`Maksymalna liczba argumentów wynosi 1`);

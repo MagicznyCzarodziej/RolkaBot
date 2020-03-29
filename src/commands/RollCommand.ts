@@ -4,7 +4,8 @@ import { Message } from 'discord.js';
 export default class RollCommand implements ICommand {
   readonly name = 'roll';
   readonly aliases = ['r'];
-  readonly description = 'eg. 1d6, 4d8, 3k12';
+  readonly usage = '`<XdY>` lub `<XkY>` (X - liczba kości, Y - wartość kości)';
+  readonly description = 'rzuć kośćmi';
   execute(message: Message, args: string[]) {
     if (args.length < 1) {
       message.channel.send(`Podaj argumenty (np. \`2d6\` lub \`1k8\`)`);
