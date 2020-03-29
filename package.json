@@ -1,0 +1,25 @@
+{
+  "name": "rolka",
+  "version": "1.0.0",
+  "main": "./build/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node build/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^12.1.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.5",
+    "@types/ws": "^7.2.3",
+    "@types/yamljs": "^0.2.30",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "nodemon": "^2.0.2",
+    "typescript": "^3.8.3"
+  }
+}
