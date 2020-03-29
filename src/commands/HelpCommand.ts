@@ -19,7 +19,8 @@ export default class HelpCommand implements ICommand {
     for (const file of commandFiles) {
       const command = require(__dirname + `/${file}`).default;
       const cmd = new command();
-      commandStrings.push(`\`${cmd.name}\`|\`${cmd.aliases.join('\`|\`')}\` ${cmd.usage} - ${cmd.description}`);
+      const commandString = buildCommandString(cmd.name, cmd.aliases, cmd.usage, cmd.description);
+      commandStrings.push(commandString);
     }
 
     const embed = new MessageEmbed()
@@ -28,10 +29,25 @@ export default class HelpCommand implements ICommand {
       .addFields(
         {
           name: 'Dostępne komendy:', 
-          value: `\`komenda\`|\`alias\` \`<argument [opcjonalny argument]>\` - opis\n\n${commandStrings.join('\n')}`,
+          value: `\`komenda\`|\`alias\` \`<argument [opcjonalny argument]>\` - opis` +
+            `\n\n${commandStrings.join('\n')}`,
         }
       )
 
     message.channel.send(embed);
   }
+}
+
+function buildCommandString (
+    name: string,
+    aliases: string[],
+    usage: string,
+    description: string,
+  ): string {
+  const nameString = `\`${name}\``;
+  const aliasesString = `|\`${aliases.join('\`|\`')}\` `;
+  const commandElements = [nameString, usage, ' - ', description];
+  if (aliases.length) commandElements.splice(1, 0, aliasesString);
+
+  return commandElements.join('');
 }
