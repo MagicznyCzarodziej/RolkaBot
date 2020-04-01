@@ -22,7 +22,10 @@ export default class RollCommand implements Command {
       const diceValue = Number(values[2]);
       const plus = Number(values[3]);
 
-      if (diceValue < 2) 
+      if (howManyDice > 50)
+        return message.channel.send(`Niewłaściwa ilość kości (\`${howManyDice}\`)`);
+
+      if (diceValue < 2 || diceValue > 300) 
         return message.channel.send(`Niewłaściwa wartość kości (\`${diceValue}\`)`);
 
       rolls.push(rollDice(howManyDice, diceValue, plus));
@@ -66,7 +69,7 @@ function rollDice(howManyDice: number, diceValue: number, plus?: number): Roll {
   });
 
   const roll: Roll = {
-    string: `${howManyDice}d${diceValue}${plus ? `+${plus}` : ''}`,
+    string: `${howManyDice}d${diceValue}${plus ? '+'+plus : ''}`,
     values,
     valuesStrings,
     sumString: (plus ? `${sum} + ${plus} = ${sum + plus}` : sum.toString()),

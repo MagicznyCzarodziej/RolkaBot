@@ -10,7 +10,7 @@ export default class TalesCommand implements Command {
     if (args.length > 1) return message.channel.send(`Maksymalna liczba argumentów wynosi 1`);
     
     const howManyDice = args.length > 0 ? parseInt(args[0]) : 6;
-    if (isNaN (howManyDice) || howManyDice < 1)
+    if (isNaN (howManyDice) || howManyDice < 1 || howManyDice > 50)
       return message.channel.send(`Niewłaściwa wartość (\`${args[0]}\`)`);
 
     const values = new Array(howManyDice).fill(undefined).map(() => {

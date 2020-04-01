@@ -75,8 +75,14 @@ export default class Rolka {
       const commandName = args.shift().toLowerCase();
       const command = this.commands.get(commandName);
       
-      if (command) command.execute(message, args);
-      else if (this.prefixRequired && message.content.startsWith(this.prefix)) {
+      if (command) {
+        try {
+          command.execute(message, args);
+        } catch(error) {
+          message.channel.send('Wystąpił błąd podczas wykonywania komendy.');
+          console.error(error);
+        }
+      } else if (this.prefixRequired && message.content.startsWith(this.prefix)) {
         message.channel.send('Niewłaściwa komenda.');
       }
     });
