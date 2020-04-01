@@ -1,8 +1,8 @@
 import { ICommand } from '../Api';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message } from 'discord.js';
 import Rolka from '../Rolka';
 
-export default class HelpCommand implements ICommand {
+export default class PrefixCommand implements ICommand {
   private bot: Rolka;
   readonly name = 'prefix';
   readonly aliases = [] as string[];

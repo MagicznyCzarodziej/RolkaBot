@@ -1,7 +1,7 @@
 import { ICommand } from '../Api';
 import { Message, MessageEmbed } from 'discord.js';
 
-export default class HelpCommand implements ICommand {
+export default class RolkienCommand implements ICommand {
   readonly name = 'rolkien';
   readonly aliases = [] as string[];
   readonly usage = '';
