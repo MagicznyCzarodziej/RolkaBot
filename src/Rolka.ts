@@ -7,14 +7,14 @@ export default class Rolka {
   private token: string;
   private _prefix: string;
   private _prefixRequired: boolean;
-  private commands: Collection<string, ICommand>;
+  private _commands: Collection<string, ICommand>;
 
   constructor(config: Config) {
     this.token = config.TOKEN;
     this._prefix = config.PREFIX;
     this._prefixRequired = config.PREFIX_REQUIRED;
     this.client = new Client();
-    this.commands = new Collection();
+    this._commands = new Collection();
   }
 
   get prefix() {
@@ -32,6 +32,10 @@ export default class Rolka {
 
   set prefixRequired(required: boolean) {
     this._prefixRequired = required;
+  }
+
+  get commands() {
+    return this._commands;
   }
 
   public async start(): Promise<void> {
