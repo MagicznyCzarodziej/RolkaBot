@@ -1,8 +1,8 @@
-import { ICommand } from '../Api';
+import { Command } from '../Api';
 import { Message } from 'discord.js';
 import Rolka from '../Rolka';
 
-export default class PrefixCommand implements ICommand {
+export default class PrefixCommand implements Command {
   private bot: Rolka;
   readonly name = 'prefix';
   readonly aliases = [] as string[];
@@ -11,7 +11,7 @@ export default class PrefixCommand implements ICommand {
   constructor(bot: Rolka) {
     this.bot = bot;
   }
-  execute(message: Message, args: string[]) {
+  execute(message: Message, args: string[]): Promise<Message> {
     if (args.length < 1) return message.channel.send(
       `Prefix: ${this.bot.prefix} (${this.bot.prefixRequired ? 'wymagany' : 'niewymagany'})`
     );
@@ -25,7 +25,7 @@ export default class PrefixCommand implements ICommand {
       else if (args[1] === 'false') this.bot.prefixRequired = false;
       else return message.channel.send(`Nieprawidłowy argument ${args[1]}`);
     } 
-    message.channel.send(
+    return message.channel.send(
       `Zmieniono prefix na ${this.bot.prefix} ` +
       `(${this.bot.prefixRequired ? 'wymagany' : 'niewymagany'})`
     );

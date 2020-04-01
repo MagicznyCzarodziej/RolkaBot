@@ -1,13 +1,13 @@
 import * as fs from 'fs';
-import { Client, Message, Collection } from 'discord.js';
-import { ICommand, Config } from './api';
+import { Client, Collection } from 'discord.js';
+import { Command, Config } from './api';
 
 export default class Rolka {
   private client: Client;
   private token: string;
   private _prefix: string;
   private _prefixRequired: boolean;
-  private _commands: Collection<string, ICommand>;
+  private _commands: Collection<string, Command>;
 
   constructor(config: Config) {
     this.token = config.TOKEN;
@@ -42,7 +42,8 @@ export default class Rolka {
     console.log('Starting bot...');
 
     // Load commands
-    const commandFiles = fs.readdirSync(__dirname + '/commands').filter((file) => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(__dirname + '/commands')
+      .filter((file) => file.endsWith('.js'));
     
     for (const file of commandFiles) {
       const command = require(__dirname + `/commands/${file}`).default;

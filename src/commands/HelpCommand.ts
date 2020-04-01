@@ -1,10 +1,10 @@
-import { ICommand } from '../Api';
-import { Message, MessageEmbed, Collection } from 'discord.js';
+import { Command } from '../Api';
+import { Message, MessageEmbed } from 'discord.js';
 import Rolka from '../Rolka';
 
-const pj = require('../../package.json');
+import * as pj from '../../package.json';
 
-export default class HelpCommand implements ICommand {
+export default class HelpCommand implements Command {
   private bot: Rolka;
   readonly name = 'help';
   readonly aliases = ['h'];
@@ -13,7 +13,7 @@ export default class HelpCommand implements ICommand {
   constructor(bot: Rolka) {
     this.bot = bot;
   }
-  execute(message: Message, args: string[]) {
+  execute(message: Message): Promise<Message> {
     // Create set to remove duplicates from aliases
     const commands = new Set(this.bot.commands.values());
     const commandStrings = generateCommandList(commands);
@@ -30,7 +30,7 @@ export default class HelpCommand implements ICommand {
         }
       )
 
-    message.channel.send(embed);
+    return message.channel.send(embed);
   }
 }
 
@@ -41,14 +41,14 @@ function buildCommandString (
     description: string,
   ): string {
   const nameString = `\`${name}\``;
-  const aliasesString = `|\`${aliases.join('\`|\`')}\` `;
+  const aliasesString = `|\`${aliases.join('`|`')}\` `;
   const commandElements = [nameString, usage, ' - ', description];
   if (aliases.length) commandElements.splice(1, 0, aliasesString);
 
   return commandElements.join('');
 }
 
-function generateCommandList(commands: Set<ICommand> | ICommand[]): string[] {
+function generateCommandList(commands: Set<Command> | Command[]): string[] {
   const commandStrings = [] as string[];
   for (const command of commands) {
     const commandString = buildCommandString(

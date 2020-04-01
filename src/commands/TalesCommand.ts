@@ -1,22 +1,17 @@
-import { ICommand } from '../Api';
+import { Command } from '../Api';
 import { Message } from 'discord.js';
 
-export default class TalesCommand implements ICommand {
+export default class TalesCommand implements Command {
   readonly name = 'tales';
   readonly aliases = ['t', 'tftl'];
   readonly usage = '`<liczba kości>`';
   readonly description = 'rzuć kośćmi d6';
-  execute(message: Message, args: string[]) {
-    if (args.length > 1) {
-      message.channel.send(`Maksymalna liczba argumentów wynosi 1`);
-      return;
-    }
-
+  execute(message: Message, args: string[]): Promise<Message> {
+    if (args.length > 1) return message.channel.send(`Maksymalna liczba argumentów wynosi 1`);
+    
     const howManyDice = args.length > 0 ? parseInt(args[0]) : 6;
-    if (isNaN (howManyDice) || howManyDice < 1) {
-      message.channel.send(`Niewłaściwa wartość (\`${args[0]}\`)`);
-      return;
-    }
+    if (isNaN (howManyDice) || howManyDice < 1)
+      return message.channel.send(`Niewłaściwa wartość (\`${args[0]}\`)`);
 
     const values = new Array(howManyDice).fill(undefined).map(() => {
       return randomNumber(6);
@@ -35,10 +30,10 @@ export default class TalesCommand implements ICommand {
 
     const response = `\`${howManyDice}d6\` ( ${valuesStrings.join('+')} )\n`+
       `Sukcesów: ${successes} ${successes > 0 ? emojiCool : emojiCo}`;
-    message.channel.send(response);
+    return message.channel.send(response);
   }
 }
 
-function randomNumber(diceValue: number) {
+function randomNumber(diceValue: number): number {
   return (Math.floor(Math.random() * diceValue) + 1);
 }

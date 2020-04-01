@@ -1,30 +1,20 @@
-import { ICommand } from '../Api';
+import { Command } from '../Api';
 import { Message } from 'discord.js';
 
-export default class RollCommand implements ICommand {
+export default class RollCommand implements Command {
   readonly name = 'roll';
   readonly aliases = ['r'];
   readonly usage = '`<[X]dY[+Z]>` lub `<[X]kY[+Z]>` (X - liczba kości, Y - wartość kości, Z - bonus)';
   readonly description = 'rzuć kośćmi';
-  execute(message: Message, args: string[]) {
-    if (args.length < 1) {
-      message.channel.send(`Podaj argumenty`);
-      return;
-    }
-
-    if (args.length > 5) {
-      message.channel.send(`Maksymalna liczba argumentów wynosi 5`);
-      return;
-    }
+  execute(message: Message, args: string[]): Promise<Message> {
+    if (args.length < 1) return message.channel.send(`Podaj argumenty`);
+    if (args.length > 5) return message.channel.send(`Maksymalna liczba argumentów wynosi 5`);
 
     const rolls = [];
     for (const arg of args) {
       const validationRegex = /^(\d+)?[dk](\d+)(\+\d+)?$/;
       const isValid = RegExp(validationRegex).test(arg);
-      if (!isValid) {
-        message.channel.send(`Niewłaściwy format argumentów (\`${arg}\`)`);
-        return;
-      }
+      if (!isValid) return message.channel.send(`Niewłaściwy format argumentów (\`${arg}\`)`);
 
       const values = arg.match(validationRegex);
 
@@ -32,10 +22,8 @@ export default class RollCommand implements ICommand {
       const diceValue = Number(values[2]);
       const plus = Number(values[3]);
 
-      if (diceValue < 2) {
-        message.channel.send(`Niewłaściwa wartość kości (\`${diceValue}\`)`);
-        return;
-      }
+      if (diceValue < 2) 
+        return message.channel.send(`Niewłaściwa wartość kości (\`${diceValue}\`)`);
 
       rolls.push(rollDice(howManyDice, diceValue, plus));
     }
@@ -49,15 +37,15 @@ export default class RollCommand implements ICommand {
         `\n`
       );
     }
-    message.channel.send(response);
+    return message.channel.send(response);
   }
 }
 
-function randomNumber(diceValue: number) {
+function randomNumber(diceValue: number): number{
   return (Math.floor(Math.random() * diceValue) + 1);
 }
 
-function rollDice(howManyDice: number, diceValue: number, plus?: number) {
+function rollDice(howManyDice: number, diceValue: number, plus?: number): Roll {
   const values = new Array(howManyDice).fill(undefined).map(() => {
     return randomNumber(diceValue);
   });
@@ -77,7 +65,7 @@ function rollDice(howManyDice: number, diceValue: number, plus?: number) {
     return (number === 1 || number === diceValue) ? `**${number}**` : number.toString();
   });
 
-  const roll = {
+  const roll: Roll = {
     string: `${howManyDice}d${diceValue}${plus ? `+${plus}` : ''}`,
     values,
     valuesStrings,
@@ -87,4 +75,13 @@ function rollDice(howManyDice: number, diceValue: number, plus?: number) {
   }
 
   return roll;
+}
+
+type Roll = {
+  string: string;
+  values: number[];
+  valuesStrings: string[];
+  sumString: string;
+  successes: number;
+  failures: number;
 }
