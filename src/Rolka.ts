@@ -17,7 +17,7 @@ export default class Rolka {
     this._commands = new Collection();
   }
 
-  get prefix() {
+  get prefix(): string {
     return this._prefix;
   }
 
@@ -26,7 +26,7 @@ export default class Rolka {
     this.client.user.setActivity(`${this.prefix}help`, { type: 'LISTENING'});
   }
 
-  get prefixRequired() {
+  get prefixRequired(): boolean {
     return this._prefixRequired;
   }
 
@@ -34,7 +34,7 @@ export default class Rolka {
     this._prefixRequired = required;
   }
 
-  get commands() {
+  get commands(): Collection<string, Command> {
     return this._commands;
   }
 
