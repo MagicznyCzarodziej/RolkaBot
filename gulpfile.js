@@ -34,27 +34,3 @@ function start(cb) {
 exports.build = build;
 exports.watch = gulp.series(build, watch);
 exports.start = start;
-
-// // WATCH
-// // ----------------------------------------------------------------------------
-//   gulp.task('watch', ['build'], function() {
-//     gulp.watch('./src/**/*.ts', ['build'])
-//   })
-
-// // START
-// // ----------------------------------------------------------------------------
-//   gulp.task('start', ['build'], function() {
-//     return gulpNodemon({
-//       script: './build/index.js',
-//       watch: './build/index.js'
-//     })
-//   })
-
-// // SERVER
-// // ----------------------------------------------------------------------------
-//   gulp.task('serve', ['watch'], function() {
-//     return gulpNodemon({
-//       script: './build/index.js',
-//       watch: './build/'
-//     })
-//   });

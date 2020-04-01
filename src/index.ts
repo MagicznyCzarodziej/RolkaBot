@@ -1,8 +1,6 @@
 import Rolka from './Rolka';
 import * as path from 'path';
-import * as YAML from 'yamljs'
-
-const config = YAML.load(path.resolve(__dirname, 'config.yml'));
+import config from './config';
 
 const rolka = new Rolka(config);
 

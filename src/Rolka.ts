@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { Client, Message, Collection } from 'discord.js';
-import { ICommand } from './api';
+import { ICommand, Config } from './api';
 
 export default class Rolka {
   private client: Client;
@@ -9,15 +9,15 @@ export default class Rolka {
   private prefixRequired: boolean;
   private commands: Collection<string, ICommand>;
 
-  constructor(config: any) {
-    this.token = config.token;
-    this.prefix = config.prefix;
-    this.prefixRequired = config.prefixRequired;
+  constructor(config: Config) {
+    this.token = config.TOKEN;
+    this.prefix = config.PREFIX;
+    this.prefixRequired = config.PREFIX_REQUIRED;
     this.client = new Client();
     this.commands = new Collection();
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
     console.log('Starting bot...');
 
     // Load commands
@@ -59,6 +59,10 @@ export default class Rolka {
       }
     });
 
-    this.client.login(this.token);
+    try {
+      await this.client.login(this.token);
+    } catch (error) {
+      console.error('ERROR: Invalid token');
+    }
   }
 }
