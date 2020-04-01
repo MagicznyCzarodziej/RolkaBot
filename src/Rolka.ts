@@ -5,16 +5,33 @@ import { ICommand, Config } from './api';
 export default class Rolka {
   private client: Client;
   private token: string;
-  private prefix: string;
-  private prefixRequired: boolean;
+  private _prefix: string;
+  private _prefixRequired: boolean;
   private commands: Collection<string, ICommand>;
 
   constructor(config: Config) {
     this.token = config.TOKEN;
-    this.prefix = config.PREFIX;
-    this.prefixRequired = config.PREFIX_REQUIRED;
+    this._prefix = config.PREFIX;
+    this._prefixRequired = config.PREFIX_REQUIRED;
     this.client = new Client();
     this.commands = new Collection();
+  }
+
+  get prefix() {
+    return this._prefix;
+  }
+
+  set prefix(prefix: string) {
+    this._prefix = prefix;
+    this.client.user.setActivity(`${this.prefix}help`, { type: 'LISTENING'});
+  }
+
+  get prefixRequired() {
+    return this._prefixRequired;
+  }
+
+  set prefixRequired(required: boolean) {
+    this._prefixRequired = required;
   }
 
   public async start(): Promise<void> {
@@ -25,7 +42,7 @@ export default class Rolka {
     
     for (const file of commandFiles) {
       const command = require(__dirname + `/commands/${file}`).default;
-      const commandInstance = new command();
+      const commandInstance = new command(this);
 
       this.commands.set(commandInstance.name, commandInstance);
       for (const alias of commandInstance.aliases) {
